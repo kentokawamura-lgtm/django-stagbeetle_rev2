@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'style.css' %}">
+{% block title %}ログイン画面{% endblock %}
+
+{% block content %}
+<form action="" method="POST">
+    {% csrf_token %}
+    {{form.as_table}}
+</form>
+<input class="btn btn-success" type="submit" value="送信">
+
+
+
+{% endblock %}

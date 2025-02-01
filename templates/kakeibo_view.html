@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'style.css' %}">
+{% block title %}{{ user }}さんの家計簿アプリ{% endblock %}
+
+{% block content %}
+<section>
+  <div class="row">
+    <div class="col-md-6">
+<div>
+  <canvas id="myChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const ctx = document.getElementById('myChart');
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['#id_label1', '#id_label2'],
+      datasets: [{
+        label: '# of Votes',
+        data: [12, 19],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
+</div>
+  </div>
+</section>
+
+
+    <div class="row">
+        <div class="col-md-3">
+            <a href="{% url 'kakeibo:kakeibo_view' month_previous.year month_previous.month month_previous.day %}" class="link-underline-primary">前月</a>
+{{ month_current | date:"Y年m月" }}
+<a href="{% url 'kakeibo:kakeibo_view' month_next.year month_next.month month_next.day %}" >次月</a>
+
+<table class="table" style="table-layout: fixed;">
+    <thead>
+        <tr>
+            {% for w in week_names %}
+                <th>{{ w }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+    {% for week in month_days %}
+        <tr>
+            {% for day in week %}
+                {% if now == day %}
+                    <td class="table-success">
+                {% else %}
+                    <td>
+                {% endif %}
+
+                <a href="{% url 'kakeibo:kakeibo_view' day.year day.month day.day %}" class="text-primary">{{ day.day }}</a>
+                </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+        <hr>
+            <form action="" method="POST">
+                {{ form.non_field_errors }}               
+                {% for field in form %}
+                    <div class="form-group row">
+                        <label for="{{ field.id_for_label }}"
+                               class="col-sm-4 col-form-label">{{ field.label_tag }}</label>
+                        <div class="col-sm-8">
+                            {{ field }}
+                            {{ field.errors }}
+                        </div>
+                    </div>
+                {% endfor %}
+                {% csrf_token %}
+                <div class="col-md-12 d-grid">
+                    <button class="btn btn-primary">収入・支出を追加！</button>
+                </div>
+            </form>
+    </div>
+    <div class="col-md-9">
+        <a href="{% url 'kakeibo:kakeibo_view' week_previous.year week_previous.month  week_previous.day %}">前週</a>
+            {{ week_first | date:"Y年m月d日" }}〜{{ week_last | date:"Y年m月d日" }}
+        <a href="{% url 'kakeibo:kakeibo_view' week_next.year week_next.month  week_next.day %}">次週</a>
+        <hr>
+    <table class="table" style="table-layout: fixed;">
+        <tbody>
+            <tr>
+            {% for day in week_days %}
+                {% if now == day %}
+                    <td class="table-success">
+                {% else %}
+                    <td>
+                {% endif %}
+                {% if week_first.month != day.month %}
+                    {{ day | date:"m/d" }}
+                {% else %}
+                    {{ day.day }}
+                {% endif %}
+            </td>
+            {% endfor %}
+            </tr>
+            <tr>
+             
+            {% for schedules in week_day_schedules.values %}
+            <td>
+                {% for s in schedules %}
+                {% if s.user == request.user %}
+                    <br>
+                    <a href="{% url 'kakeibo:detail' s.pk %}" class="text-primary">{{ s.summary | linebreaks }}</a>
+                    <br>
+                    {% endif %}
+                {% endfor %}
+            </td>
+            {% endfor %}
+           
+            </tr>
+        </tbody>
+
+</table>
+
+<div class="row mb-9 ">
+    <div class="col-md-8 mx-auto text-center">
+      <h1>支出・収入一覧</h1>
+      <p>
+        1週間の収入、支出一覧が下に表示されます。詳細を確認する場合は、それぞれのカードをいクリックしましょう。
+      </p>
+    </div>
+    <div class="row g-4">
+      
+    {% for schedules in week_day_schedules.values %}
+
+    {% for s in schedules %}
+    {% if s.user == request.user %}
+      <div class="col-md-4">
+        <div class="blog-card card-effect">
+          <img src="" alt="">
+          <h3 class="mb-0 mt-4 text-white"><a href="{% url 'kakeibo:detail' s.pk %}">{{ s.summary | linebreaks }}</a></h3>
+        </div>
+      </div>
+      {% endif %}
+      {% endfor %}
+
+      {% endfor %}
+
+    </div>
+
+
+</div>
+
+
+        
+  
+
+    {% endblock %}
+
+    {% block extrajs %}
+    <!--
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/timedropper/1.0/timedropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/timedropper/1.0/timedropper.min.js"></script>
+    <script>
+        $(function () {
+            // timedropper
+            $("#id_start_time").timeDropper({
+                format: "H:mm",
+                setCurrentTime: false,
+            });
+            $("#id_end_time").timeDropper({
+                format: "H:mm",
+                setCurrentTime: false,
+            });
+        });
+    </script>
+    -->
+    <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/timedropper/1.0/timedropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/timedropper/1.0/timedropper.min.js"></script>
+<script>
+  $(function () {
+      // timedropper
+      $("#id_start_time").timeDropper({
+          format: "H:mm",
+          setCurrentTime: false,
+      });
+      $("#id_end_time").timeDropper({
+          format: "H:mm",
+          setCurrentTime: false,
+      });
+  });
+</script>
+
+{% endblock %}
+

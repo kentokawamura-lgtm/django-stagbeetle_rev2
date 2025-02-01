@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'style2.css' %}">
+
+{% block title %}
+お問い合わせ
+
+{% endblock %} 
+{% block content %}
+<form class="form-signin" method="POST" action="">
+    {% csrf_token %}
+  <h1 class="h3 mb-3 fw-normal">お問い合わせ</h1>
+
+  <div class="form-floating">
+    <label for="floatingInput">メールアドレス</label>
+    {{ form.email }}
+  </div>
+  <div class="form-floating">
+    <label for="floatingInput">件名</label>
+    {{ form.title }}
+  </div>
+  <div class="form-floating">
+    <label for="floatingInput">メッセージ</label>
+    {{ form.message }}
+  </div>
+  <button class="btn btn-primary w-100 py-2" type="submit">送信</button>
+  <p class="mt-5 mb-3 text-body-secondary">&copy; 2017–2024</p>
+</form>
+
+
+
+{% endblock %}
