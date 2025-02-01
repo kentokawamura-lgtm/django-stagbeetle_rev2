@@ -89,25 +89,25 @@ WSGI_APPLICATION = 'stagbeetleproject_rev2.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': BASE_DIR / 'db.sqlite3',
-#    }
-#}
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
-        'OPTIONS': {'sql_mode': 'STRICT_TRANS_TABLES',}
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-db_from_env = dj_database_url.config()#ここのカッコの中身はOPTIONSにあたります
-DATABASES['default'].update(db_from_env)
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql',
+#        'NAME': '',
+#        'USER': '',
+#        'PASSWORD': '',
+#        'HOST': '',
+#        'PORT': '',
+#        'OPTIONS': {'sql_mode': 'STRICT_TRANS_TABLES',}
+#    }
+#}
+#db_from_env = dj_database_url.config()#ここのカッコの中身はOPTIONSにあたります
+#DATABASES['default'].update(db_from_env)
 
 
 
